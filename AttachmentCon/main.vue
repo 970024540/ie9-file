@@ -7,7 +7,7 @@
         <input ref="fileInput" name="file" @change="changeFile" :id="fileId" :multiple="multiple" type="file" />
       </form>
     </label>
-    <span class='beizhu'>(50MB以内，最多上传1011个)</span>
+    <span class='beizhu'>(50MB以内，最多上传10个)</span>
     <ul>
       <li v-for="item in successList" class='el-upload-list__item is-success'>
         <a class='el-upload-list__item-name'><i class='el-icon-document'></i>{{item.name}}</a>
@@ -40,7 +40,7 @@ import { mipDocumentFile2 } from "../../api/api";
           this.$message.success(this.$t(this.langMsg + '.delSuccess')); 
           this.filterIds();
         },
-        filterIds(){
+        filterIds(){//处理数据交给父组件
           let listIds=[];
           this.successList.forEach(item=>{
             if(item.response&&item.response.data){
@@ -65,7 +65,7 @@ import { mipDocumentFile2 } from "../../api/api";
         },
         uploadHtml4 (el,fileId) {//ie9的上传
           this.destoryFileInput=true;
-          setTimeout(()=>{
+          setTimeout(()=>{//更新上传按钮，否则会出现点击一次后就没反应的情况
               this.destoryFileInput=false;
           },10)
           let file={
@@ -96,7 +96,7 @@ import { mipDocumentFile2 } from "../../api/api";
           iframe.setAttribute('style', 'width:1px;height:1px;top:-999em;position:absolute; margin-top:-999em;')
 
           let form =document.createElement('form');
-          form.appendChild(el);
+          form.appendChild(el);//将文件丢到form
           let data={
               systemId:'MIP',
               moduleName:'MBPM-AUDIT-NOTE',
@@ -115,7 +115,7 @@ import { mipDocumentFile2 } from "../../api/api";
                   input.type = 'hidden'
                   input.name = key
                   input.value = value
-                  form.appendChild(input)
+                  form.appendChild(input)//将接口需要的data生成input丢到form中
               }
           }
 
@@ -128,7 +128,7 @@ import { mipDocumentFile2 } from "../../api/api";
           iframe.onreadystatechange =(e)=>{
               var readyState=iframe.readyState;
               if(readyState=='loading'){
-              }else if (readyState == 'complete') {
+              }else if (readyState == 'complete') {//载入完成获取iframe里面的数据
                   handler(e);
               }
           };
@@ -137,7 +137,7 @@ import { mipDocumentFile2 } from "../../api/api";
               return body.innerHTML || body.textContent;
           }
           let handler=(e)=>{
-              let response = getResponseData();
+              let response = getResponseData();//获取接口返回的数据
               if(response){
                   response=response.replace('<pre>', '').replace('</pre>', '');
                   response=JSON.parse(response);
@@ -147,7 +147,7 @@ import { mipDocumentFile2 } from "../../api/api";
                   }
               }
           }
-          document.body.appendChild(iframe).appendChild(form);
+          document.body.appendChild(iframe).appendChild(form);//添加到dom中
           // 提交
           form.submit();
       },
